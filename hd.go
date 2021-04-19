@@ -4,9 +4,9 @@ package hd
 import (
 	"fmt"
 
+	"github.com/RulezKT/mathfn"
 	"github.com/RulezKT/structs"
 )
-
 
 const (
 	// размер одной линии в десятичных градусах
@@ -176,7 +176,7 @@ func CalcHexLineColorToneBase(longitude float64) structs.HdStructure {
 
 	longitude *= mathfn.RAD_TO_DEG
 
-	longitude = convert_to_0_360_DEG(longitude)
+	longitude = mathfn.Convert_to_0_360_DEG(longitude)
 	// console.log(`longitude = ${longitude}`);
 
 	for key, entry := range hexSortByDeg {
@@ -230,9 +230,6 @@ func CalcHexLineColorToneBase(longitude float64) structs.HdStructure {
 
 	return structs.HdStructure{Hex: hex, Line: line, Color: color, Tone: tone, Base: base, NumberOfPassedDegrees: number_of_passed_degrees}
 }
-
-
-
 
 // TYPE
 func HdType(info *structs.CdInfo) string {
