@@ -68,6 +68,7 @@ type HexRangeRAD struct {
 	endDegree   float64
 }
 
+//при показе линия, цвет, тон, база всегда поднимаются вверх до целого числа
 func CalcHexLineColorToneBase(longitude float64) structs.HdStructure {
 
 	var hexSortByDeg = map[int]HexRangeRAD{
@@ -1305,4 +1306,119 @@ func DelElements(s [][]string, intArr []int) [][]string {
 
 	return newSlice
 
+}
+
+//color and tone sun/earth design
+func Nutritionn(color int, tone int) (string, string, string) {
+	// 6 colors, 0 element is reserved
+	// 6 tones, 0 element is reserved
+	var colors = [7][7]string{
+		{},
+		// 1st color
+		{"", "Consec.", "Consec.", "Consec.", "Alter.", "Alter.", "Alter."},
+
+		// 2nd color
+		{"", "Open", "Open", "Open", "Closed", "Closed", "Closed"},
+
+		// 3rd color
+		{"", "Hot", "Hot", "Hot", "Cold", "Cold", "Cold"},
+
+		// 4th color
+		{"", "Calm", "Calm", "Calm", "Nervous", "Nervous", "Nervous"},
+
+		// 5th color
+		{"", "High", "High", "High", "Low", "Low", "Low"},
+
+		// 6th color
+		{"", "Direct", "Direct", "Direct", "Indirect", "Indirect", "Indirect"},
+	}
+
+	// theme of nutrition
+	var colors_theme = [7]string{
+		"",
+		"Apetite",
+		"Taste",
+		"Thirst",
+		"Touch",
+		"Sound",
+		"Light",
+	}
+
+	// cognition
+	var cognition = [7]string{
+		"",
+		"Smell",
+		"Taste",
+		"Out.Vis.",
+		"Inn.Vis.",
+		"Feel.",
+		"Touch",
+	}
+
+	theme := colors_theme[color]
+	nutrType := colors[color][tone]
+	cogn := cognition[tone]
+	return theme, nutrType, cogn
+}
+
+// sun/earth personality
+func Motivation(color int, tone int) (string, string) {
+
+	var colors = [7][7]string{
+		{},
+
+		// 1st color
+		{"Fear", "Communalist", "Communalist", "Communalist", "Separatist", "Separatist", "Separatist"},
+
+		// 2nd color
+		{
+			"Hope",
+			"Theist",
+			"Theist",
+			"Theist",
+			"Anti-Theist",
+			"Anti-Theist",
+			"Anti-Theist",
+		},
+
+		// 3rd color
+		{
+			"Desire",
+			"Leader",
+			"Leader",
+			"Leader",
+			"Follower",
+			"Follower",
+			"Follower",
+		},
+
+		// 4th color
+		{"Need", "Master", "Master", "Master", "Novice", "Novice", "Novice"},
+
+		// 5th color
+		{
+			"Guilt",
+			"Conditioner",
+			"Conditioner",
+			"Conditioner",
+			"Conditioned",
+			"Conditioned",
+			"Conditioned",
+		},
+
+		// 6th color
+		{
+			"Innocence",
+			"Observer",
+			"Observer",
+			"Observer",
+			"Observed",
+			"Observed",
+			"Observed",
+		},
+	}
+
+	motivation := colors[color][0]
+	mind := colors[color][tone]
+	return motivation, mind
 }
