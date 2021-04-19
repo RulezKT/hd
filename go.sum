@@ -1,0 +1,6 @@
+github.com/RulezKT/gregdate v0.0.0-20210418212125-bb72d33a83a8 h1:J0enK/wKvuoLReZ0cbC9tfG/L4SsuvJ5xUKWD3Tc/jw=
+github.com/RulezKT/gregdate v0.0.0-20210418212125-bb72d33a83a8/go.mod h1:TpjO3ZW5jJtZnlBVQLyMiCV7VRy7uWAAJEcPAYY58XM=
+github.com/RulezKT/mathfn v0.0.0-20210419075143-6906df86e816 h1:dr1nOIQ1mKClDdiyQruM1VoIyhDOaXIREw3jP1SOO94=
+github.com/RulezKT/mathfn v0.0.0-20210419075143-6906df86e816/go.mod h1:n6JLGTcoXBF3jH9Q09GyO9jIpTgQ1p/oFQz5OR2aqF8=
+github.com/RulezKT/structs v0.0.0-20210418225609-c00e9851d3ca h1:/vhECF/PCzJgAnSxE3w5zm8Rl0P528Vn5t1IEIWImiU=
+github.com/RulezKT/structs v0.0.0-20210418225609-c00e9851d3ca/go.mod h1:ptieLNUkeCQWYRiaxI4Rj8OJPiJKm3ldHWFCbAMXT/A=
