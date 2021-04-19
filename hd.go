@@ -3,9 +3,49 @@ package hd
 
 import (
 	"fmt"
+	"math"
+	"strconv"
 
 	"github.com/RulezKT/mathfn"
 	"github.com/RulezKT/structs"
+)
+
+const (
+
+	//Astronomical Unit
+	AU = 0.1495978707e9 // km 149597870.7
+
+	// Здесь мы как начальное значение ставим eps = 23°26'21,448" градуса согласно теории вогнутой Земли
+	// double const RAD_TO_DEG = 5.7295779513082320877e1;
+	// Obliquity of the ecliptic  = 23°26'21,448"  - на 1 января 2000 года = 23.43929111111111
+	// 23.43929111111111/5.7295779513082320877e1 = 0.4090928042223289
+	MED_EPS = 0.4090928042223289
+
+	SSB       = 0
+	MERCURY   = 1 // 7,01° (относительно эклиптики)
+	VENUS     = 2 // 3,39458° (относительно эклиптики)
+	EARTH     = 3
+	MARS      = 4 // 1,85061° (относительно эклиптики)
+	JUPITER   = 5 // 1,304° (относительно эклиптики)
+	SATURN    = 6 // 2,485 240° (относительно эклиптики)
+	URANUS    = 7 // 0,772556° (относительно эклиптики)
+	NEPTUNE   = 8 // 1,767975° (относительно эклиптики)
+	PLUTO     = 9 // 17°,14 (относительно эклиптики)
+	SUN       = 10
+	MOON      = 11 // 5,14° (относительно эклиптики)
+	NORTHNODE = 12
+	SOUTHNODE = 13
+	HIRON     = 14
+
+	HEAD   = 0
+	AJNA   = 1
+	THROAT = 2
+	G      = 3
+	SACRAL = 4
+	ROOT   = 5
+	EGO    = 6
+	SPLEEN = 7
+	EMO    = 8
 )
 
 const (
@@ -229,6 +269,504 @@ func CalcHexLineColorToneBase(longitude float64) structs.HdStructure {
 	}
 
 	return structs.HdStructure{Hex: hex, Line: line, Color: color, Tone: tone, Base: base, NumberOfPassedDegrees: number_of_passed_degrees}
+}
+
+func GatesChannelsCenters(info *structs.CdInfo) {
+
+	// this.formula.personality[key].hex] и this.formula.design[key].hex показывают какие ворота определены
+	// в channels[number] = [red, black] определяем канал и как он образован red/black/both для двух ворот
+	// number - по таблице
+
+	// инициализируем ворота, отсчет от 1
+	//	var gates [65]string
+
+	//	var channels [37]structs.Channel
+
+	// инициализируем центры
+	//	var centers structs.Centers
+
+	//0 не берем, это SSB
+	for i := 1; i < len(info.HdInfo.Design.Planets.Planet); i++ {
+
+		info.HdInfo.Gates[info.HdInfo.Design.Planets.Planet[i].Hex].Des++
+		info.HdInfo.Gates[info.HdInfo.Design.Planets.Planet[i].Hex].Defined = true
+
+	}
+
+	for i := 1; i < len(info.HdInfo.Personality.Planets.Planet); i++ {
+
+		info.HdInfo.Gates[info.HdInfo.Personality.Planets.Planet[i].Hex].Pers++
+		info.HdInfo.Gates[info.HdInfo.Personality.Planets.Planet[i].Hex].Defined = true
+
+	}
+
+	gates := &info.HdInfo.Gates
+	//?  info.HdInfo.Centers.Init()
+	centers := &info.HdInfo.Centers
+
+	channels := &info.HdInfo.Channels
+
+	// HEAD && AJNA
+
+	// 1 - 64-47
+	if gates[64].Defined && gates[47].Defined {
+		centers.Center["Head"] = true
+		centers.Center["Ajna"] = true
+
+		channels[1].FirstGate = gates[64]
+		channels[1].SecondGate = gates[47]
+		channels[1].Defined = true
+	}
+
+	// 2 - 61-24
+	if gates[61].Defined && gates[24].Defined {
+		centers.Center["Head"] = true
+		centers.Center["Ajna"] = true
+
+		channels[2].FirstGate = gates[61]
+		channels[2].SecondGate = gates[24]
+		channels[2].Defined = true
+	}
+
+	// 3 - 63-4
+	if gates[63].Defined && gates[4].Defined {
+		centers.Center["Head"] = true
+		centers.Center["Ajna"] = true
+
+		channels[3].FirstGate = gates[63]
+		channels[3].SecondGate = gates[4]
+		channels[3].Defined = true
+	}
+
+	// AJNA && THROAT
+
+	// 4 - 17-62
+	if gates[17].Defined && gates[62].Defined {
+		centers.Center["Throat"] = true
+		centers.Center["Ajna"] = true
+
+		channels[4].FirstGate = gates[17]
+		channels[4].SecondGate = gates[62]
+		channels[4].Defined = true
+	}
+
+	// 5 - 43-23
+	if gates[43].Defined && gates[23].Defined {
+		centers.Center["Throat"] = true
+		centers.Center["Ajna"] = true
+
+		channels[5].FirstGate = gates[43]
+		channels[5].SecondGate = gates[23]
+		channels[5].Defined = true
+	}
+
+	// 6 - 11-56
+	if gates[11].Defined && gates[56].Defined {
+		centers.Center["Throat"] = true
+		centers.Center["Ajna"] = true
+
+		channels[6].FirstGate = gates[11]
+		channels[6].SecondGate = gates[56]
+		channels[6].Defined = true
+	}
+
+	// THROAT && G
+
+	// 14- 7-31
+	if gates[31].Defined && gates[7].Defined {
+		centers.Center["Throat"] = true
+		centers.Center["G"] = true
+
+		channels[14].FirstGate = gates[7]
+		channels[14].SecondGate = gates[31]
+		channels[14].Defined = true
+	}
+
+	// 15- 1-8
+	if gates[8].Defined && gates[1].Defined {
+		centers.Center["Throat"] = true
+		centers.Center["G"] = true
+
+		channels[15].FirstGate = gates[1]
+		channels[15].SecondGate = gates[8]
+		channels[15].Defined = true
+	}
+
+	// 16- 13-33
+	if gates[33].Defined && gates[13].Defined {
+		centers.Center["Throat"] = true
+		centers.Center["G"] = true
+
+		channels[16].FirstGate = gates[13]
+		channels[16].SecondGate = gates[33]
+		channels[16].Defined = true
+	}
+
+	// G && SACRAL
+
+	// 20- 5-15
+	if gates[15].Defined && gates[5].Defined {
+		centers.Center["G"] = true
+		centers.Center["Sacral"] = true
+
+		channels[20].FirstGate = gates[5]
+		channels[20].SecondGate = gates[15]
+		channels[20].Defined = true
+	}
+
+	// 21- 14-2
+	if gates[2].Defined && gates[14].Defined {
+		centers.Center["G"] = true
+		centers.Center["Sacral"] = true
+
+		channels[21].FirstGate = gates[14]
+		channels[21].SecondGate = gates[2]
+		channels[21].Defined = true
+	}
+
+	// 22- 29-46
+	if gates[46].Defined && gates[29].Defined {
+		centers.Center["G"] = true
+		centers.Center["Sacral"] = true
+
+		channels[22].FirstGate = gates[29]
+		channels[22].SecondGate = gates[46]
+	}
+
+	// SACRAL && ROOT
+
+	// 31- 53-42
+	if gates[42].Defined && gates[53].Defined {
+		centers.Center["Sacral"] = true
+		centers.Center["Root"] = true
+
+		channels[31].FirstGate = gates[53]
+		channels[31].SecondGate = gates[42]
+		channels[31].Defined = true
+	}
+
+	// 32- 60-3
+	if gates[3].Defined && gates[60].Defined {
+		centers.Center["Sacral"] = true
+		centers.Center["Root"] = true
+
+		channels[32].FirstGate = gates[60]
+		channels[32].SecondGate = gates[3]
+		channels[32].Defined = true
+	}
+
+	// 33- 52-9
+	if gates[9].Defined && gates[52].Defined {
+		centers.Center["Sacral"] = true
+		centers.Center["Root"] = true
+
+		channels[33].FirstGate = gates[52]
+		channels[33].SecondGate = gates[9]
+		channels[33].Defined = true
+	}
+
+	// ROOT && EMO
+
+	// 34- 19-49
+	if gates[19].Defined && gates[49].Defined {
+		centers.Center["Root"] = true
+		centers.Center["Emo"] = true
+
+		channels[34].FirstGate = gates[19]
+		channels[34].SecondGate = gates[49]
+		channels[34].Defined = true
+	}
+
+	// 35- 39-55
+	if gates[39].Defined && gates[55].Defined {
+		centers.Center["Root"] = true
+		centers.Center["Emo"] = true
+
+		channels[35].FirstGate = gates[39]
+		channels[35].SecondGate = gates[55]
+		channels[35].Defined = true
+	}
+
+	// 36- 41-30
+	if gates[41].Defined && gates[30].Defined {
+		centers.Center["Root"] = true
+		centers.Center["Emo"] = true
+
+		channels[36].FirstGate = gates[41]
+		channels[36].SecondGate = gates[30]
+		channels[36].Defined = true
+	}
+
+	// ROOT && SPLEEN
+	// 30- 58-18
+	if gates[18].Defined && gates[58].Defined {
+		centers.Center["Root"] = true
+		centers.Center["Spleen"] = true
+
+		channels[30].FirstGate = gates[58]
+		channels[30].SecondGate = gates[18]
+		channels[30].Defined = true
+	}
+
+	// 29- 38-28
+	if gates[28].Defined && gates[38].Defined {
+		centers.Center["Root"] = true
+		centers.Center["Spleen"] = true
+
+		channels[29].FirstGate = gates[38]
+		channels[29].SecondGate = gates[28]
+		channels[29].Defined = true
+	}
+
+	// 28- 54-32
+	if gates[32].Defined && gates[54].Defined {
+		centers.Center["Root"] = true
+		centers.Center["Spleen"] = true
+
+		channels[28].FirstGate = gates[54]
+		channels[28].SecondGate = gates[32]
+		channels[28].Defined = true
+	}
+
+	// EMO && SACRAL, EGO, THROAT
+
+	// 26- 59-6
+	if gates[59].Defined && gates[6].Defined {
+		centers.Center["Emo"] = true
+		centers.Center["Sacral"] = true
+
+		channels[26].FirstGate = gates[59]
+		channels[26].SecondGate = gates[6]
+		channels[26].Defined = true
+	}
+
+	// 27- 37-40
+	if gates[37].Defined && gates[40].Defined {
+		centers.Center["Emo"] = true
+		centers.Center["Ego"] = true
+
+		channels[27].FirstGate = gates[37]
+		channels[27].SecondGate = gates[40]
+		channels[27].Defined = true
+	}
+
+	// 18- 22-12
+	if gates[22].Defined && gates[12].Defined {
+		centers.Center["Emo"] = true
+		centers.Center["Throat"] = true
+
+		channels[18].FirstGate = gates[22]
+		channels[18].SecondGate = gates[12]
+		channels[18].Defined = true
+	}
+
+	// 19- 36-35
+	if gates[35].Defined && gates[36].Defined {
+		centers.Center["Emo"] = true
+		centers.Center["Throat"] = true
+
+		channels[19].FirstGate = gates[36]
+		channels[19].SecondGate = gates[35]
+		channels[19].Defined = true
+	}
+
+	// EGO && SPLEEN, G, THROAT
+
+	// 24- 44-26
+	if gates[44].Defined && gates[26].Defined {
+		centers.Center["Ego"] = true
+		centers.Center["Spleen"] = true
+
+		channels[24].FirstGate = gates[44]
+		channels[24].SecondGate = gates[26]
+		channels[24].Defined = true
+	}
+
+	// 23- 51-25
+	if gates[51].Defined && gates[25].Defined {
+		centers.Center["Ego"] = true
+		centers.Center["G"] = true
+
+		channels[23].FirstGate = gates[51]
+		channels[23].SecondGate = gates[25]
+		channels[23].Defined = true
+	}
+
+	// 17- 21-45
+	if gates[21].Defined && gates[45].Defined {
+		centers.Center["Ego"] = true
+		centers.Center["Throat"] = true
+
+		channels[17].FirstGate = gates[21]
+		channels[17].SecondGate = gates[45]
+		channels[17].Defined = true
+	}
+
+	// SACRAL && SPLEEN
+
+	// 25- 27-50
+	if gates[27].Defined && gates[50].Defined {
+		centers.Center["Spleen"] = true
+		centers.Center["Sacral"] = true
+
+		channels[25].FirstGate = gates[27]
+		channels[25].SecondGate = gates[50]
+		channels[25].Defined = true
+	}
+
+	// THROAT && SPLEEN
+
+	// 7 - 48-16
+	if gates[48].Defined && gates[16].Defined {
+		centers.Center["Spleen"] = true
+		centers.Center["Throat"] = true
+
+		channels[7].FirstGate = gates[48]
+		channels[7].SecondGate = gates[16]
+		channels[7].Defined = true
+	}
+
+	// INTEGRATION
+
+	if gates[20].Defined || gates[57].Defined || gates[10].Defined || gates[34].Defined {
+		// 8 - 57-20
+		if gates[20].Defined && gates[57].Defined {
+			centers.Center["Spleen"] = true
+			centers.Center["Throat"] = true
+
+			channels[8].FirstGate = gates[57]
+			channels[8].SecondGate = gates[20]
+			channels[8].Defined = true
+		}
+
+		// 10- 10-20
+		if gates[20].Defined && gates[10].Defined {
+			centers.Center["G"] = true
+			centers.Center["Throat"] = true
+
+			channels[10].FirstGate = gates[10]
+			channels[10].SecondGate = gates[20]
+			channels[10].Defined = true
+		}
+
+		// 9 - 34-20
+		if gates[20].Defined && gates[34].Defined {
+			centers.Center["Sacral"] = true
+			centers.Center["Throat"] = true
+
+			channels[9].FirstGate = gates[34]
+			channels[9].SecondGate = gates[20]
+			channels[9].Defined = true
+		}
+
+		// 11- 57-10
+		if gates[10].Defined && gates[57].Defined {
+			centers.Center["Spleen"] = true
+			centers.Center["G"] = true
+
+			channels[11].FirstGate = gates[57]
+			channels[11].SecondGate = gates[10]
+			channels[11].Defined = true
+		}
+
+		// 12- 57-34
+		if gates[34].Defined && gates[57].Defined {
+			centers.Center["Spleen"] = true
+			centers.Center["Sacral"] = true
+
+			channels[12].FirstGate = gates[57]
+			channels[12].SecondGate = gates[34]
+			channels[12].Defined = true
+		}
+
+		// 13- 34-10
+		if gates[34].Defined && gates[10].Defined {
+			centers.Center["G"] = true
+			centers.Center["Sacral"] = true
+
+			channels[13].FirstGate = gates[34]
+			channels[13].SecondGate = gates[10]
+			channels[13].Defined = true
+		}
+	}
+
+}
+
+func Profile(info *structs.CdInfo) {
+
+	info.HdInfo.Profile = strconv.Itoa(int(math.Ceil(info.HdInfo.Personality.Planets.Planet[SUN].Line))) + "/" + strconv.Itoa(int(math.Ceil(info.HdInfo.Design.Planets.Planet[SUN].Line)))
+
+}
+
+func Authority(info *structs.CdInfo) {
+
+	var authority string
+
+	if info.HdInfo.Centers.Center["Emo"] {
+		authority = "Emo"
+	} else if info.HdInfo.Centers.Center["Sacral"] {
+		authority = "Sacral"
+	} else if info.HdInfo.Centers.Center["Spleen"] {
+		authority = "Spleen"
+	} else if info.HdInfo.Centers.Center["Ego"] {
+		authority = "Ego"
+	} else if info.HdInfo.Centers.Center["G"] {
+		authority = "Self projected"
+	} else if info.HdInfo.Centers.Center["Throat"] || info.HdInfo.Centers.Center["Ajna"] || info.HdInfo.Centers.Center["Head"] {
+		authority = "No inner authority"
+	} else {
+		authority = "Moon"
+	}
+
+	info.HdInfo.Authority = authority
+
+}
+
+func Variable(info *structs.CdInfo) {
+
+	var first string
+	if info.HdInfo.Personality.Planets.Planet[SUN].Tone > 3 {
+		first = "R"
+	} else {
+
+		first = "L"
+	}
+
+	var second string
+	if info.HdInfo.Personality.Planets.Planet[NORTHNODE].Tone > 3 {
+		second = "R"
+	} else {
+
+		second = "L"
+	}
+
+	var third string
+	if info.HdInfo.Design.Planets.Planet[SUN].Tone > 3 {
+		third = "R"
+	} else {
+
+		third = "L"
+	}
+
+	var forth string
+	if info.HdInfo.Design.Planets.Planet[NORTHNODE].Tone > 3 {
+		forth = "R"
+	} else {
+
+		forth = "L"
+	}
+
+	info.HdInfo.Variable = "P" + first + second + "D" + third + forth
+
+}
+
+func Cross(info *structs.CdInfo) {
+
+	info.HdInfo.Cross.First = info.HdInfo.Personality.Planets.Planet[SUN].Hex
+	info.HdInfo.Cross.Second = info.HdInfo.Personality.Planets.Planet[EARTH].Hex
+	info.HdInfo.Cross.Third = info.HdInfo.Design.Planets.Planet[SUN].Hex
+	info.HdInfo.Cross.Forth = info.HdInfo.Design.Planets.Planet[EARTH].Hex
+
 }
 
 // TYPE
